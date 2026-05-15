@@ -1,14 +1,14 @@
 "use client";
 
 import { useStore } from "@/lib/store";
-import { X, ThumbsUp, Pause } from "lucide-react";
+import { ThumbsUp, Pause } from "lucide-react";
 
 interface Props {
   who: "you" | "partner";
 }
 
 export default function HeadspaceCheck({ who }: Props) {
-  const { setMeetingStep, endMeeting } = useStore();
+  const { setMeetingStep } = useStore();
   const isYou = who === "you";
   const label = isYou ? "your" : "your partner's";
 
@@ -26,13 +26,6 @@ export default function HeadspaceCheck({ who }: Props) {
 
   return (
     <div className="flex flex-col items-center justify-center h-full px-8 text-center">
-      <button
-        onClick={endMeeting}
-        className="absolute top-4 right-4 w-8 h-8 rounded-full bg-muted-light flex items-center justify-center"
-      >
-        <X size={18} className="text-muted" />
-      </button>
-
       <div className="w-16 h-16 rounded-full bg-coral-light flex items-center justify-center mb-6">
         <span className="text-3xl">{isYou ? "👋" : "🤝"}</span>
       </div>

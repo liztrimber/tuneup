@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useStore, CATEGORY_META, type Category } from "@/lib/store";
-import { Plus, X, ArrowRight } from "lucide-react";
+import { Plus, ArrowRight } from "lucide-react";
 import AddAgendaSheet from "../AddAgendaSheet";
 
 export default function BuildAgenda() {
@@ -17,14 +17,7 @@ export default function BuildAgenda() {
   }
 
   return (
-    <div className="px-6 pt-14 pb-8">
-      <button
-        onClick={() => useStore.getState().endMeeting()}
-        className="absolute top-4 right-4 w-8 h-8 rounded-full bg-muted-light flex items-center justify-center"
-      >
-        <X size={18} className="text-muted" />
-      </button>
-
+    <div className="px-6 pt-6 pb-8">
       <div className="mb-6">
         <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">
           {fiveMin ? "Quick tuneup" : "Getting started"}

@@ -63,7 +63,7 @@ export default function TopicWalkthrough() {
   }
 
   return (
-    <div className="px-6 pt-14 pb-8">
+    <div className="px-6 pt-6 pb-8">
       <div className="flex items-center justify-between mb-6">
         <div>
           <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">

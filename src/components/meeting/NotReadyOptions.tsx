@@ -1,13 +1,12 @@
 "use client";
 
 import { useStore } from "@/lib/store";
-import { Clock, CalendarX, Zap, X } from "lucide-react";
+import { Clock, CalendarX, Zap } from "lucide-react";
 
 const MAX_RESCHEDULES = 3;
 
 export default function NotReadyOptions() {
-  const { meeting, setMeetingStep, setFiveMinMode, incrementReschedule, endMeeting } =
-    useStore();
+  const { meeting, setMeetingStep, setFiveMinMode, incrementReschedule, endMeeting } = useStore();
 
   const reschedules = meeting?.rescheduleCount ?? 0;
   const canReschedule = reschedules < MAX_RESCHEDULES;
@@ -25,13 +24,6 @@ export default function NotReadyOptions() {
 
   return (
     <div className="flex flex-col items-center justify-center h-full px-8 text-center">
-      <button
-        onClick={endMeeting}
-        className="absolute top-4 right-4 w-8 h-8 rounded-full bg-muted-light flex items-center justify-center"
-      >
-        <X size={18} className="text-muted" />
-      </button>
-
       <div className="w-16 h-16 rounded-full bg-warning/10 flex items-center justify-center mb-6">
         <Clock size={28} className="text-warning" />
       </div>

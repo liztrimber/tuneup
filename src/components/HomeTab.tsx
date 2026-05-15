@@ -66,14 +66,14 @@ export default function HomeTab() {
 
       <button
         onClick={() => setShowAdd(true)}
-        className="w-full bg-surface rounded-2xl border border-dashed border-border p-4 flex items-center gap-3 text-left hover:border-primary transition-colors mb-5 active:scale-[0.98]"
+        className="w-full bg-coral text-white rounded-2xl p-4 flex items-center gap-3 text-left hover:bg-coral-dark transition-colors mb-5 active:scale-[0.98] shadow-sm"
       >
-        <div className="w-10 h-10 rounded-full bg-primary-light flex items-center justify-center">
-          <Plus size={20} className="text-primary" />
+        <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+          <Plus size={22} className="text-white" />
         </div>
         <div>
           <p className="text-sm font-semibold">Add to agenda</p>
-          <p className="text-xs text-muted">
+          <p className="text-xs text-white/80">
             Note something to discuss this week
           </p>
         </div>

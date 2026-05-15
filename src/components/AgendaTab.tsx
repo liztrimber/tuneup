@@ -55,19 +55,18 @@ export default function AgendaTab() {
 
   return (
     <div className="px-5 pt-14 pb-6">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold">Agenda</h1>
-          <p className="text-muted text-sm mt-0.5">
-            {undiscussed.length} item{undiscussed.length !== 1 && "s"} for this
-            week
-          </p>
-        </div>
+      <div className="mb-5">
+        <h1 className="text-2xl font-bold">Agenda</h1>
+        <p className="text-muted text-sm mt-0.5 mb-4">
+          {undiscussed.length} item{undiscussed.length !== 1 && "s"} for this
+          week
+        </p>
         <button
           onClick={() => setShowAdd(true)}
-          className="w-10 h-10 rounded-full bg-primary flex items-center justify-center hover:bg-primary-dark transition-colors active:scale-95"
+          className="w-full bg-coral text-white rounded-xl py-3 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-coral-dark transition-colors active:scale-[0.98] shadow-sm"
         >
-          <Plus size={20} className="text-white" />
+          <Plus size={18} />
+          Add to agenda
         </button>
       </div>
 

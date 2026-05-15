@@ -19,7 +19,7 @@ export default function ActionItemsStep() {
   }
 
   return (
-    <div className="px-6 pt-14 pb-8">
+    <div className="px-6 pt-6 pb-8">
       <div className="mb-6">
         <p className="text-xs font-semibold text-coral uppercase tracking-wider mb-1">
           Capture to-dos
