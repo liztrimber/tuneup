@@ -63,7 +63,7 @@ export default function AgendaTab() {
         </p>
         <button
           onClick={() => setShowAdd(true)}
-          className="w-full bg-coral text-white rounded-xl py-3 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-coral-dark transition-colors active:scale-[0.98] shadow-sm"
+          className="w-full bg-sage text-white rounded-xl py-3 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-sage-dark transition-colors active:scale-[0.98] shadow-sm"
         >
           <Plus size={18} />
           Add to agenda
@@ -71,9 +71,9 @@ export default function AgendaTab() {
       </div>
 
       {undiscussed.length > 0 ? (
-        <div className="bg-coral-light/40 rounded-xl p-3.5 mb-5 flex items-start gap-3">
-          <MessageCircle size={16} className="text-coral shrink-0 mt-0.5" />
-          <p className="text-xs text-coral-dark leading-relaxed">
+        <div className="bg-sage-light/60 rounded-xl p-3.5 mb-5 flex items-start gap-3">
+          <MessageCircle size={16} className="text-sage-dark shrink-0 mt-0.5" />
+          <p className="text-xs text-sage-dark leading-relaxed">
             Tap the <span className="font-semibold">chat icon</span> on any item
             to prep how you want to bring it up — before the meeting even starts.
           </p>

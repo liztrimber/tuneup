@@ -36,7 +36,7 @@ export default function MeetingTimer() {
         isOvertime
           ? "bg-danger/10 text-danger"
           : paused
-          ? "bg-coral-light text-coral-dark"
+          ? "bg-sage-light text-sage-dark"
           : "bg-primary-light text-primary-dark"
       }`}
     >
@@ -49,7 +49,7 @@ export default function MeetingTimer() {
       <div className="flex-1 h-1 bg-white/50 rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-1000 ${
-            isOvertime ? "bg-danger" : paused ? "bg-coral" : "bg-primary"
+            isOvertime ? "bg-danger" : paused ? "bg-sage" : "bg-primary"
           }`}
           style={{ width: `${progress * 100}%` }}
         />

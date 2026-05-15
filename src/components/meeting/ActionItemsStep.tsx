@@ -21,7 +21,7 @@ export default function ActionItemsStep() {
   return (
     <div className="px-6 pt-6 pb-8">
       <div className="mb-6">
-        <p className="text-xs font-semibold text-coral uppercase tracking-wider mb-1">
+        <p className="text-xs font-semibold text-sage-dark uppercase tracking-wider mb-1">
           Capture to-dos
         </p>
         <h1 className="text-xl font-bold">What needs to happen?</h1>

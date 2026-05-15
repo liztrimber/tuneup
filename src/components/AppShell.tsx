@@ -85,7 +85,7 @@ export default function AppShell() {
 
         <button
           onClick={startMeeting}
-          className="w-14 h-14 rounded-full bg-coral flex items-center justify-center -mt-8 shadow-lg hover:bg-coral-dark transition-colors active:scale-95"
+          className="w-14 h-14 rounded-full bg-sage flex items-center justify-center -mt-8 shadow-lg hover:bg-sage-dark transition-colors active:scale-95"
         >
           <Play size={22} fill="white" className="text-white ml-0.5" />
         </button>

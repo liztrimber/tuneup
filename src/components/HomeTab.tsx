@@ -36,7 +36,7 @@ export default function HomeTab() {
       </div>
 
       <div className="bg-surface rounded-2xl border border-border p-5 mb-5">
-        <div className="flex items-center gap-2 text-coral text-sm mb-3">
+        <div className="flex items-center gap-2 text-sage-dark text-sm mb-3">
           <Calendar size={15} />
           <span className="font-medium">Next tuneup</span>
         </div>
@@ -66,7 +66,7 @@ export default function HomeTab() {
 
       <button
         onClick={() => setShowAdd(true)}
-        className="w-full bg-coral text-white rounded-2xl p-4 flex items-center gap-3 text-left hover:bg-coral-dark transition-colors mb-5 active:scale-[0.98] shadow-sm"
+        className="w-full bg-sage text-white rounded-2xl p-4 flex items-center gap-3 text-left hover:bg-sage-dark transition-colors mb-5 active:scale-[0.98] shadow-sm"
       >
         <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
           <Plus size={22} className="text-white" />

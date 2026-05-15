@@ -26,7 +26,7 @@ export default function HeadspaceCheck({ who }: Props) {
 
   return (
     <div className="flex flex-col items-center justify-center h-full px-8 text-center">
-      <div className="w-16 h-16 rounded-full bg-coral-light flex items-center justify-center mb-6">
+      <div className="w-16 h-16 rounded-full bg-sage-light flex items-center justify-center mb-6">
         <span className="text-3xl">{isYou ? "👋" : "🤝"}</span>
       </div>
 

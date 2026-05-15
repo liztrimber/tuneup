@@ -162,8 +162,8 @@ export default function SettingsTab() {
                 <p className="text-xs text-success">Connected</p>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-coral-light flex items-center justify-center">
-                  <span className="text-sm font-semibold text-coral-dark">
+                <div className="w-8 h-8 rounded-full bg-sage-light flex items-center justify-center">
+                  <span className="text-sm font-semibold text-sage-dark">
                     {partnerName[0].toUpperCase()}
                   </span>
                 </div>
@@ -218,10 +218,10 @@ export default function SettingsTab() {
         ) : (
           <button
             onClick={() => setShowInvite(true)}
-            className="w-full bg-surface rounded-xl border border-dashed border-border p-4 flex items-center gap-3 hover:border-coral transition-colors active:scale-[0.98]"
+            className="w-full bg-surface rounded-xl border border-dashed border-border p-4 flex items-center gap-3 hover:border-sage transition-colors active:scale-[0.98]"
           >
-            <div className="w-10 h-10 rounded-full bg-coral-light flex items-center justify-center">
-              <UserPlus size={18} className="text-coral" />
+            <div className="w-10 h-10 rounded-full bg-sage-light flex items-center justify-center">
+              <UserPlus size={18} className="text-sage" />
             </div>
             <div className="text-left">
               <p className="text-sm font-semibold">Add your partner</p>

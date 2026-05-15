@@ -22,7 +22,7 @@ const SLIDES = [
   },
   {
     icon: Heart,
-    color: "#F87171",
+    color: "#6B8F71",
     title: "Help when you need it",
     body: "Not sure how to bring something up? Tap \"Need help with this one?\" during any topic for coaching on how to frame it constructively — without blame.",
   },
