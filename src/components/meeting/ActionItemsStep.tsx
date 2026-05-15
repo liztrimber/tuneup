@@ -1,0 +1,108 @@
+"use client";
+
+import { useState } from "react";
+import { useStore } from "@/lib/store";
+import { Plus, ArrowRight, Trash2 } from "lucide-react";
+
+export default function ActionItemsStep() {
+  const { actionItems, addActionItem, removeActionItem, setMeetingStep } =
+    useStore();
+  const [text, setText] = useState("");
+  const [assignee, setAssignee] = useState<"you" | "partner">("you");
+
+  const pending = actionItems.filter((i) => !i.done);
+
+  function handleAdd() {
+    if (!text.trim()) return;
+    addActionItem(text.trim(), assignee);
+    setText("");
+  }
+
+  return (
+    <div className="px-6 pt-14 pb-8">
+      <div className="mb-6">
+        <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">
+          Capture to-dos
+        </p>
+        <h1 className="text-xl font-bold">What needs to happen?</h1>
+        <p className="text-muted text-sm mt-1">
+          Add any action items from your conversation. They&apos;ll live in your
+          shared to-do list.
+        </p>
+      </div>
+
+      <div className="bg-surface rounded-xl border border-border p-4 mb-4">
+        <input
+          autoFocus
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+          placeholder="e.g., Schedule dentist appointment"
+          className="w-full text-sm bg-transparent focus:outline-none placeholder:text-muted"
+        />
+        <div className="flex items-center gap-2 mt-3">
+          <div className="flex gap-1.5 flex-1">
+            {(["you", "partner"] as const).map((a) => (
+              <button
+                key={a}
+                onClick={() => setAssignee(a)}
+                className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors capitalize ${
+                  assignee === a
+                    ? "border-primary bg-primary-light text-primary-dark"
+                    : "border-border text-muted"
+                }`}
+              >
+                {a === "you" ? "Me" : "Partner"}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={handleAdd}
+            disabled={!text.trim()}
+            className="w-8 h-8 rounded-full bg-primary flex items-center justify-center disabled:opacity-30 hover:bg-primary-dark transition-colors"
+          >
+            <Plus size={16} className="text-white" />
+          </button>
+        </div>
+      </div>
+
+      {pending.length > 0 && (
+        <div className="mb-6">
+          <h2 className="text-xs font-semibold text-muted uppercase tracking-wider mb-2">
+            All open to-dos
+          </h2>
+          <div className="bg-surface rounded-xl border border-border divide-y divide-border">
+            {pending.map((item) => (
+              <div
+                key={item.id}
+                className="flex items-center gap-3 p-3.5 group"
+              >
+                <div className="w-4 h-4 rounded border-2 border-border shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm">{item.text}</p>
+                </div>
+                <span className="text-xs text-muted capitalize bg-muted-light rounded-full px-2 py-0.5">
+                  {item.assignee}
+                </span>
+                <button
+                  onClick={() => removeActionItem(item.id)}
+                  className="opacity-0 group-hover:opacity-100 text-muted hover:text-danger transition-all p-1"
+                >
+                  <Trash2 size={12} />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <button
+        onClick={() => setMeetingStep("close")}
+        className="w-full bg-primary text-white rounded-xl py-3.5 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-primary-dark transition-colors active:scale-[0.98]"
+      >
+        Wrap up
+        <ArrowRight size={16} />
+      </button>
+    </div>
+  );
+}
