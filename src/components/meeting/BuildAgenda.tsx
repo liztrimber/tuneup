@@ -4,9 +4,10 @@ import { useState } from "react";
 import { useStore, CATEGORY_META, type Category } from "@/lib/store";
 import { Plus, ArrowRight } from "lucide-react";
 import AddAgendaSheet from "../AddAgendaSheet";
+import CategoryIcon from "../CategoryIcon";
 
 export default function BuildAgenda() {
-  const { agendaItems, meeting, setMeetingStep, startTimebox } = useStore();
+  const { agendaItems, meeting, setMeetingStep, startTimebox, partnerName } = useStore();
   const [showAdd, setShowAdd] = useState(false);
   const undiscussed = agendaItems.filter((i) => !i.discussed);
   const fiveMin = meeting?.fiveMinMode;
@@ -38,16 +39,13 @@ export default function BuildAgenda() {
             const meta = CATEGORY_META[item.category];
             return (
               <div key={item.id} className="flex items-center gap-3 p-4">
-                <div
-                  className="w-2.5 h-2.5 rounded-full shrink-0"
-                  style={{ backgroundColor: meta.color }}
-                />
+                <CategoryIcon name={meta.icon} size={16} className="shrink-0" style={{ color: meta.color }} />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm">{item.text}</p>
                   <p className="text-xs text-muted">{meta.label}</p>
                 </div>
-                <span className="text-xs text-muted capitalize">
-                  {item.addedBy}
+                <span className="text-xs text-muted">
+                  {item.addedBy === "you" ? "Me" : partnerName ?? "Partner"}
                 </span>
               </div>
             );
@@ -71,7 +69,7 @@ export default function BuildAgenda() {
 
       <button
         onClick={handleContinue}
-        className="w-full bg-primary text-white rounded-xl py-3.5 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-primary-dark transition-colors active:scale-[0.98]"
+        className="w-full bg-sage text-white rounded-xl py-3.5 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-sage-dark transition-colors active:scale-[0.98]"
       >
         Start the tuneup
         <ArrowRight size={16} />

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useStore, CATEGORY_META, type Category } from "@/lib/store";
 import { Check, UserPlus, X } from "lucide-react";
+import CategoryIcon from "./CategoryIcon";
 
 const DAYS = [
   "Monday",
@@ -111,10 +112,10 @@ export default function SettingsTab() {
 
       <section className="mb-6">
         <h2 className="text-xs font-semibold text-muted uppercase tracking-wider mb-3">
-          Repeating topics
+          Repeating categories
         </h2>
         <p className="text-sm text-muted mb-3">
-          These topics appear in every meeting automatically.
+          These categories appear in every meeting automatically.
         </p>
         <div className="bg-surface rounded-xl border border-border divide-y divide-border">
           {categories
@@ -127,10 +128,7 @@ export default function SettingsTab() {
                   onClick={() => toggleRepeatingCategory(key)}
                   className="flex items-center gap-3 p-3.5 w-full text-left"
                 >
-                  <div
-                    className="w-3 h-3 rounded-full shrink-0"
-                    style={{ backgroundColor: meta.color }}
-                  />
+                  <CategoryIcon name={meta.icon} size={16} className="shrink-0" style={{ color: meta.color }} />
                   <span className="text-sm flex-1">{meta.label}</span>
                   <div
                     className={`w-5 h-5 rounded flex items-center justify-center transition-colors ${

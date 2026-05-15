@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import AddAgendaSheet from "./AddAgendaSheet";
+import CategoryIcon from "./CategoryIcon";
 
 export default function HomeTab() {
   const {
@@ -20,6 +21,7 @@ export default function HomeTab() {
     meetingTime,
     startMeeting,
     removeAgendaItem,
+    partnerName,
   } = useStore();
   const [showAdd, setShowAdd] = useState(false);
 
@@ -50,7 +52,7 @@ export default function HomeTab() {
           </div>
           <button
             onClick={startMeeting}
-            className="bg-primary text-white rounded-full px-5 py-2.5 text-sm font-semibold flex items-center gap-2 hover:bg-primary-dark transition-colors active:scale-95"
+            className="bg-sage text-white rounded-full px-5 py-2.5 text-sm font-semibold flex items-center gap-2 hover:bg-sage-dark transition-colors active:scale-95"
           >
             <Play size={16} fill="white" />
             Start now
@@ -66,7 +68,7 @@ export default function HomeTab() {
 
       <button
         onClick={() => setShowAdd(true)}
-        className="w-full bg-sage text-white rounded-2xl p-4 flex items-center gap-3 text-left hover:bg-sage-dark transition-colors mb-5 active:scale-[0.98] shadow-sm"
+        className="w-full bg-primary text-white rounded-2xl p-4 flex items-center gap-3 text-left hover:bg-primary-dark transition-colors mb-5 active:scale-[0.98] shadow-sm"
       >
         <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
           <Plus size={22} className="text-white" />
@@ -89,10 +91,7 @@ export default function HomeTab() {
               const meta = CATEGORY_META[item.category];
               return (
                 <div key={item.id} className="flex items-center gap-3 p-4">
-                  <div
-                    className="w-2 h-2 rounded-full shrink-0"
-                    style={{ backgroundColor: meta.color }}
-                  />
+                  <CategoryIcon name={meta.icon} size={14} className="shrink-0" style={{ color: meta.color }} />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm truncate">{item.text}</p>
                     <p className="text-xs text-muted">{meta.label}</p>
@@ -132,8 +131,8 @@ export default function HomeTab() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm truncate">{item.text}</p>
                 </div>
-                <span className="text-xs text-muted bg-muted-light rounded-full px-2 py-0.5 capitalize">
-                  {item.assignee}
+                <span className="text-xs text-muted bg-muted-light rounded-full px-2 py-0.5">
+                  {item.assignee === "you" ? "Me" : partnerName ?? "Partner"}
                 </span>
               </div>
             ))}

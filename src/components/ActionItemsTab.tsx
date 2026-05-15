@@ -5,7 +5,7 @@ import { Plus, Trash2, Check } from "lucide-react";
 import { useStore } from "@/lib/store";
 
 export default function ActionItemsTab() {
-  const { actionItems, addActionItem, toggleActionItem, removeActionItem } =
+  const { actionItems, addActionItem, toggleActionItem, removeActionItem, partnerName } =
     useStore();
   const [showAdd, setShowAdd] = useState(false);
   const [newText, setNewText] = useState("");
@@ -47,13 +47,13 @@ export default function ActionItemsTab() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-medium border transition-colors capitalize ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-medium border transition-colors ${
               filter === f
                 ? "border-primary bg-primary-light text-primary-dark"
                 : "border-border text-muted"
             }`}
           >
-            {f === "all" ? "All" : f}
+            {f === "all" ? "All" : f === "you" ? "Me" : partnerName ?? "Partner"}
           </button>
         ))}
       </div>
@@ -73,8 +73,8 @@ export default function ActionItemsTab() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm">{item.text}</p>
                 </div>
-                <span className="text-xs text-muted bg-muted-light rounded-full px-2 py-0.5 capitalize">
-                  {item.assignee}
+                <span className="text-xs text-muted bg-muted-light rounded-full px-2 py-0.5">
+                  {item.assignee === "you" ? "Me" : partnerName ?? "Partner"}
                 </span>
                 <button
                   onClick={() => removeActionItem(item.id)}
@@ -107,8 +107,8 @@ export default function ActionItemsTab() {
                     {item.text}
                   </p>
                 </div>
-                <span className="text-xs text-muted bg-muted-light rounded-full px-2 py-0.5 capitalize">
-                  {item.assignee}
+                <span className="text-xs text-muted bg-muted-light rounded-full px-2 py-0.5">
+                  {item.assignee === "you" ? "Me" : partnerName ?? "Partner"}
                 </span>
                 <button
                   onClick={() => removeActionItem(item.id)}
@@ -123,19 +123,20 @@ export default function ActionItemsTab() {
       )}
 
       {showAdd && (
-        <ActionItemSheet onClose={() => setShowAdd(false)} onAdd={handleAdd} newText={newText} setNewText={setNewText} newAssignee={newAssignee} setNewAssignee={setNewAssignee} />
+        <ActionItemSheet onClose={() => setShowAdd(false)} onAdd={handleAdd} newText={newText} setNewText={setNewText} newAssignee={newAssignee} setNewAssignee={setNewAssignee} partnerLabel={partnerName ?? "Partner"} />
       )}
     </div>
   );
 }
 
-function ActionItemSheet({ onClose, onAdd, newText, setNewText, newAssignee, setNewAssignee }: {
+function ActionItemSheet({ onClose, onAdd, newText, setNewText, newAssignee, setNewAssignee, partnerLabel }: {
   onClose: () => void;
   onAdd: () => void;
   newText: string;
   setNewText: (v: string) => void;
   newAssignee: "you" | "partner";
   setNewAssignee: (v: "you" | "partner") => void;
+  partnerLabel: string;
 }) {
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
@@ -169,7 +170,7 @@ function ActionItemSheet({ onClose, onAdd, newText, setNewText, newAssignee, set
                   : "border-border text-muted"
               }`}
             >
-              {a === "you" ? "I'll do it" : "Partner"}
+              {a === "you" ? "I'll do it" : partnerLabel}
             </button>
           ))}
         </div>

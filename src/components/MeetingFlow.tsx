@@ -98,7 +98,7 @@ export default function MeetingFlow() {
               </button>
               <button
                 onClick={() => { setShowConfirm(false); endMeeting(); }}
-                className="flex-1 py-3 rounded-xl bg-sage text-white text-sm font-semibold hover:bg-sage-dark transition-colors"
+                className="flex-1 py-3 rounded-xl bg-danger text-white text-sm font-semibold hover:opacity-90 transition-colors"
               >
                 Leave
               </button>

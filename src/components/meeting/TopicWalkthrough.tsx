@@ -7,12 +7,14 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import CoachingPanel from "./CoachingPanel";
+import CategoryIcon from "../CategoryIcon";
 
 export default function TopicWalkthrough() {
   const {
     agendaItems,
     meeting,
     repeatingCategories,
+    partnerName,
     nextTopic,
     prevTopic,
     markDiscussed,
@@ -70,18 +72,15 @@ export default function TopicWalkthrough() {
             Topic {currentIndex + 1} of {undiscussed.length}
           </p>
           <div className="flex items-center gap-2">
-            <div
-              className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: meta.color }}
-            />
+            <CategoryIcon name={meta.icon} size={14} style={{ color: meta.color }} />
             <span className="text-xs font-medium text-muted">
               {meta.label}
               {isRepeating && " · Repeating"}
             </span>
           </div>
         </div>
-        <span className="text-xs text-muted capitalize bg-muted-light rounded-full px-2 py-0.5">
-          {item.addedBy}
+        <span className="text-xs text-muted bg-muted-light rounded-full px-2 py-0.5">
+          {item.addedBy === "you" ? "Me" : partnerName ?? "Partner"}
         </span>
       </div>
 

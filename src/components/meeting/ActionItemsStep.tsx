@@ -5,7 +5,7 @@ import { useStore } from "@/lib/store";
 import { Plus, ArrowRight, X } from "lucide-react";
 
 export default function ActionItemsStep() {
-  const { actionItems, addActionItem, removeActionItem, setMeetingStep } =
+  const { actionItems, addActionItem, removeActionItem, setMeetingStep, partnerName } =
     useStore();
   const [text, setText] = useState("");
   const [assignee, setAssignee] = useState<"you" | "partner">("you");
@@ -52,7 +52,7 @@ export default function ActionItemsStep() {
                     : "border-border text-muted"
                 }`}
               >
-                {a === "you" ? "Me" : "Partner"}
+                {a === "you" ? "Me" : partnerName ?? "Partner"}
               </button>
             ))}
           </div>
@@ -81,8 +81,8 @@ export default function ActionItemsStep() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm">{item.text}</p>
                 </div>
-                <span className="text-xs text-muted capitalize bg-muted-light rounded-full px-2 py-0.5">
-                  {item.assignee}
+                <span className="text-xs text-muted bg-muted-light rounded-full px-2 py-0.5">
+                  {item.assignee === "you" ? "Me" : partnerName ?? "Partner"}
                 </span>
                 <button
                   onClick={() => removeActionItem(item.id)}

@@ -52,30 +52,30 @@ export interface MeetingState {
 
 export const CATEGORY_META: Record<
   Category,
-  { label: string; emoji: string; color: string }
+  { label: string; icon: string; color: string }
 > = {
-  appreciation: { label: "Appreciation", emoji: "heart", color: "#10B981" },
-  logistics: { label: "Logistics", emoji: "calendar", color: "#6366F1" },
+  appreciation: { label: "Appreciation", icon: "Heart", color: "#10B981" },
+  logistics: { label: "Logistics", icon: "CalendarDays", color: "#6366F1" },
   "division-of-labor": {
     label: "Division of Labor",
-    emoji: "scale",
+    icon: "Scale",
     color: "#F59E0B",
   },
-  money: { label: "Money", emoji: "wallet", color: "#EF4444" },
-  kids: { label: "Kids", emoji: "baby", color: "#EC4899" },
+  money: { label: "Money", icon: "Wallet", color: "#EF4444" },
+  kids: { label: "Kids", icon: "Baby", color: "#EC4899" },
   "something-on-my-mind": {
     label: "Something on My Mind",
-    emoji: "thought",
+    icon: "MessageCircle",
     color: "#8B5CF6",
   },
   "personal-needs": {
     label: "Personal Needs",
-    emoji: "user",
+    icon: "User",
     color: "#14B8A6",
   },
-  household: { label: "Household", emoji: "home", color: "#F97316" },
-  us: { label: "Us", emoji: "heart-handshake", color: "#E11D48" },
-  "coming-up": { label: "Coming Up", emoji: "arrow-right", color: "#0EA5E9" },
+  household: { label: "Household", icon: "Home", color: "#F97316" },
+  us: { label: "Us", icon: "HeartHandshake", color: "#E11D48" },
+  "coming-up": { label: "Coming Up", icon: "ArrowRight", color: "#0EA5E9" },
 };
 
 const DEFAULT_REPEATING: Category[] = [
@@ -101,6 +101,7 @@ interface AppState {
     addedBy: "you" | "partner"
   ) => void;
   removeAgendaItem: (id: string) => void;
+  toggleAgendaItemRepeating: (id: string) => void;
   markDiscussed: (id: string) => void;
   addActionItem: (text: string, assignee: "you" | "partner") => void;
   toggleActionItem: (id: string) => void;
@@ -198,6 +199,13 @@ export const useStore = create<AppState>()(
           agendaItems: s.agendaItems.filter((i) => i.id !== itemId),
         })),
 
+      toggleAgendaItemRepeating: (itemId) =>
+        set((s) => ({
+          agendaItems: s.agendaItems.map((i) =>
+            i.id === itemId ? { ...i, repeating: !i.repeating } : i
+          ),
+        })),
+
       markDiscussed: (itemId) =>
         set((s) => ({
           agendaItems: s.agendaItems.map((i) =>
@@ -290,7 +298,9 @@ export const useStore = create<AppState>()(
       endMeeting: () =>
         set((s) => ({
           meeting: null,
-          agendaItems: s.agendaItems.filter((i) => !i.discussed && i.repeating),
+          agendaItems: s.agendaItems
+            .filter((i) => !i.discussed || i.repeating)
+            .map((i) => (i.discussed && i.repeating ? { ...i, discussed: false } : i)),
         })),
 
       setTimebox: (minutes) =>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Calendar, MessageCircle, CheckSquare, Heart } from "lucide-react";
+import { ArrowRight, Users, ListChecks, Lightbulb, Handshake } from "lucide-react";
 
 interface Props {
   onComplete: () => void;
@@ -9,25 +9,25 @@ interface Props {
 
 const SLIDES = [
   {
-    icon: Calendar,
+    icon: Handshake,
     color: "#1E3A5F",
     title: "Welcome to Tuneup",
     body: "A weekly conversation for busy parents to keep the household running — and stay connected while doing it.",
   },
   {
-    icon: MessageCircle,
-    color: "#1E3A5F",
+    icon: ListChecks,
+    color: "#6B8F71",
     title: "Structured, not scripted",
-    body: "Build a shared agenda through the week. When it's time to meet, the app walks you through each topic — starting with appreciation, then working through logistics, division of labor, and anything else on your mind.",
+    body: "Build a shared agenda through the week. When it's time to meet, the app walks you through each topic — starting with appreciation, then working through what matters most.",
   },
   {
-    icon: Heart,
-    color: "#6B8F71",
+    icon: Lightbulb,
+    color: "#D4952B",
     title: "Help when you need it",
     body: "Not sure how to bring something up? Tap \"Need help with this one?\" during any topic for coaching on how to frame it constructively — without blame.",
   },
   {
-    icon: CheckSquare,
+    icon: Users,
     color: "#1E3A5F",
     title: "Capture what matters",
     body: "After each conversation, capture to-dos in a shared list. No reminders, no nagging — just a reference you can both check anytime.",
