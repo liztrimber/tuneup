@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Eye, Heart, Hand, ArrowRight, ArrowLeft } from "lucide-react";
 import { getCoaching, COACHING_STEPS } from "@/lib/coaching";
 import { CATEGORY_META, type Category } from "@/lib/store";
@@ -12,6 +12,14 @@ interface Props {
 }
 
 export default function AgendaPrepSheet({ itemText, category, onClose }: Props) {
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [onClose]);
+
   const [step, setStep] = useState(0);
   const [notes, setNotes] = useState(["", "", ""]);
   const coaching = getCoaching(category);

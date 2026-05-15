@@ -2,23 +2,28 @@
 
 import { useState, useEffect } from "react";
 import { useStore } from "@/lib/store";
-import { Clock } from "lucide-react";
+import { Clock, Pause, Play } from "lucide-react";
 
 export default function MeetingTimer() {
   const meeting = useStore((s) => s.meeting);
-  const [elapsed, setElapsed] = useState(0);
+  const pauseTimebox = useStore((s) => s.pauseTimebox);
+  const resumeTimebox = useStore((s) => s.resumeTimebox);
+  const [liveElapsed, setLiveElapsed] = useState(0);
 
   const startedAt = meeting?.timeboxStartedAt;
+  const paused = meeting?.timeboxPaused ?? false;
+  const pausedElapsed = meeting?.timeboxPausedElapsed ?? 0;
   const totalMs = (meeting?.timeboxMinutes ?? 20) * 60 * 1000;
 
   useEffect(() => {
-    if (!startedAt) return;
+    if (!startedAt || paused) return;
     const interval = setInterval(() => {
-      setElapsed(Date.now() - startedAt);
+      setLiveElapsed(Date.now() - startedAt + pausedElapsed);
     }, 1000);
     return () => clearInterval(interval);
-  }, [startedAt]);
+  }, [startedAt, paused, pausedElapsed]);
 
+  const elapsed = paused ? pausedElapsed : liveElapsed;
   const remaining = Math.max(0, totalMs - elapsed);
   const minutes = Math.floor(remaining / 60000);
   const seconds = Math.floor((remaining % 60000) / 1000);
@@ -27,24 +32,33 @@ export default function MeetingTimer() {
 
   return (
     <div
-      className={`px-4 py-2 flex items-center gap-2 text-xs font-medium ${
+      className={`px-4 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] flex items-center gap-2 text-xs font-medium ${
         isOvertime
           ? "bg-danger/10 text-danger"
+          : paused
+          ? "bg-coral-light text-coral-dark"
           : "bg-primary-light text-primary-dark"
       }`}
     >
-      <Clock size={12} />
+      <button
+        onClick={paused ? resumeTimebox : pauseTimebox}
+        className="p-0.5 hover:opacity-70 transition-opacity"
+      >
+        {paused ? <Play size={12} fill="currentColor" /> : <Pause size={12} />}
+      </button>
       <div className="flex-1 h-1 bg-white/50 rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-1000 ${
-            isOvertime ? "bg-danger" : "bg-primary"
+            isOvertime ? "bg-danger" : paused ? "bg-coral" : "bg-primary"
           }`}
           style={{ width: `${progress * 100}%` }}
         />
       </div>
-      <span className="tabular-nums w-12 text-right">
+      <span className="tabular-nums w-16 text-right">
         {isOvertime
           ? "Over"
+          : paused
+          ? `${minutes}:${seconds.toString().padStart(2, "0")} ⏸`
           : `${minutes}:${seconds.toString().padStart(2, "0")}`}
       </span>
     </div>

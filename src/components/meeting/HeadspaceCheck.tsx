@@ -33,7 +33,7 @@ export default function HeadspaceCheck({ who }: Props) {
         <X size={18} className="text-muted" />
       </button>
 
-      <div className="w-16 h-16 rounded-full bg-primary-light flex items-center justify-center mb-6">
+      <div className="w-16 h-16 rounded-full bg-coral-light flex items-center justify-center mb-6">
         <span className="text-3xl">{isYou ? "👋" : "🤝"}</span>
       </div>
 

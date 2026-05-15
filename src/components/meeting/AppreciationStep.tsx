@@ -21,7 +21,7 @@ export default function AppreciationStep() {
   return (
     <div className="px-6 pt-14 pb-8">
       <div className="mb-8">
-        <p className="text-xs font-semibold text-success uppercase tracking-wider mb-1">
+        <p className="text-xs font-semibold text-coral uppercase tracking-wider mb-1">
           Step 1
         </p>
         <h1 className="text-xl font-bold">Appreciation</h1>
@@ -30,10 +30,10 @@ export default function AppreciationStep() {
         </p>
       </div>
 
-      <div className="bg-success/5 border border-success/20 rounded-2xl p-6 mb-6">
+      <div className="bg-coral-light/50 border border-coral/20 rounded-2xl p-6 mb-6">
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center shrink-0">
-            <Heart size={18} className="text-success" />
+          <div className="w-10 h-10 rounded-full bg-coral-light flex items-center justify-center shrink-0">
+            <Heart size={18} className="text-coral" />
           </div>
           <div>
             <p className="text-sm font-medium text-foreground mb-1">

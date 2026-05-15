@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useStore } from "@/lib/store";
-import { Plus, ArrowRight, Trash2 } from "lucide-react";
+import { Plus, ArrowRight, X } from "lucide-react";
 
 export default function ActionItemsStep() {
   const { actionItems, addActionItem, removeActionItem, setMeetingStep } =
@@ -21,7 +21,7 @@ export default function ActionItemsStep() {
   return (
     <div className="px-6 pt-14 pb-8">
       <div className="mb-6">
-        <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">
+        <p className="text-xs font-semibold text-coral uppercase tracking-wider mb-1">
           Capture to-dos
         </p>
         <h1 className="text-xl font-bold">What needs to happen?</h1>
@@ -59,14 +59,14 @@ export default function ActionItemsStep() {
           <button
             onClick={handleAdd}
             disabled={!text.trim()}
-            className="w-8 h-8 rounded-full bg-primary flex items-center justify-center disabled:opacity-30 hover:bg-primary-dark transition-colors"
+            className="w-10 h-10 min-w-[40px] rounded-full bg-primary flex items-center justify-center disabled:opacity-30 hover:bg-primary-dark transition-colors"
           >
-            <Plus size={16} className="text-white" />
+            <Plus size={18} className="text-white" />
           </button>
         </div>
       </div>
 
-      {pending.length > 0 && (
+      {pending.length > 0 ? (
         <div className="mb-6">
           <h2 className="text-xs font-semibold text-muted uppercase tracking-wider mb-2">
             All open to-dos
@@ -75,9 +75,9 @@ export default function ActionItemsStep() {
             {pending.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center gap-3 p-3.5 group"
+                className="flex items-center gap-3 p-3.5"
               >
-                <div className="w-4 h-4 rounded border-2 border-border shrink-0" />
+                <div className="w-5 h-5 rounded border-2 border-border shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm">{item.text}</p>
                 </div>
@@ -86,13 +86,19 @@ export default function ActionItemsStep() {
                 </span>
                 <button
                   onClick={() => removeActionItem(item.id)}
-                  className="opacity-0 group-hover:opacity-100 text-muted hover:text-danger transition-all p-1"
+                  className="text-muted hover:text-danger transition-colors p-1 shrink-0"
                 >
-                  <Trash2 size={12} />
+                  <X size={15} />
                 </button>
               </div>
             ))}
           </div>
+        </div>
+      ) : (
+        <div className="bg-surface rounded-xl border border-dashed border-border p-5 text-center mb-6">
+          <p className="text-sm text-muted">
+            No to-dos yet — add any from your conversation above, or skip ahead.
+          </p>
         </div>
       )}
 

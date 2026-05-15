@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Trash2, MessageCircle } from "lucide-react";
+import { Plus, X, MessageCircle } from "lucide-react";
 import { useStore, CATEGORY_META, type Category, type AgendaItem } from "@/lib/store";
 import AddAgendaSheet from "./AddAgendaSheet";
 import AgendaPrepSheet from "./AgendaPrepSheet";
@@ -29,7 +29,7 @@ export default function AgendaTab() {
 
   function renderItem(item: AgendaItem) {
     return (
-      <div key={item.id} className="flex items-center gap-3 p-3.5 group">
+      <div key={item.id} className="flex items-center gap-3 p-3.5">
         <div className="flex-1 min-w-0">
           <p className="text-sm">{item.text}</p>
           <p className="text-xs text-muted capitalize">
@@ -38,16 +38,16 @@ export default function AgendaTab() {
         </div>
         <button
           onClick={() => setPrepItem(item)}
-          className="text-primary/60 hover:text-primary transition-colors p-1"
+          className="text-primary/60 hover:text-primary transition-colors p-1 shrink-0"
           title="Prep for this topic"
         >
           <MessageCircle size={15} />
         </button>
         <button
           onClick={() => removeAgendaItem(item.id)}
-          className="opacity-0 group-hover:opacity-100 text-muted hover:text-danger transition-all p-1"
+          className="text-muted hover:text-danger transition-colors p-1 shrink-0"
         >
-          <Trash2 size={14} />
+          <X size={15} />
         </button>
       </div>
     );
@@ -71,13 +71,22 @@ export default function AgendaTab() {
         </button>
       </div>
 
-      <div className="bg-primary-light/40 rounded-xl p-3.5 mb-5 flex items-start gap-3">
-        <MessageCircle size={16} className="text-primary shrink-0 mt-0.5" />
-        <p className="text-xs text-primary-dark leading-relaxed">
-          Tap the <span className="font-semibold">chat icon</span> on any item
-          to prep how you want to bring it up — before the meeting even starts.
-        </p>
-      </div>
+      {undiscussed.length > 0 ? (
+        <div className="bg-coral-light/40 rounded-xl p-3.5 mb-5 flex items-start gap-3">
+          <MessageCircle size={16} className="text-coral shrink-0 mt-0.5" />
+          <p className="text-xs text-coral-dark leading-relaxed">
+            Tap the <span className="font-semibold">chat icon</span> on any item
+            to prep how you want to bring it up — before the meeting even starts.
+          </p>
+        </div>
+      ) : (
+        <div className="bg-surface rounded-2xl border border-dashed border-border p-6 text-center mb-5">
+          <p className="text-sm text-muted mb-1">No agenda items yet</p>
+          <p className="text-xs text-muted">
+            Add something you want to discuss — it&apos;ll show up here and in your next tuneup.
+          </p>
+        </div>
+      )}
 
       {grouped.map(({ category, meta, items }) => (
         <div key={category} className="mb-5">

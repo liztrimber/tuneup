@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { useStore, CATEGORY_META, type Category } from "@/lib/store";
 
@@ -15,6 +15,14 @@ export default function AddAgendaSheet({ onClose, defaultCategory }: Props) {
   const [category, setCategory] = useState<Category>(
     defaultCategory ?? "logistics"
   );
+
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [onClose]);
 
   const categories = Object.entries(CATEGORY_META) as [
     Category,

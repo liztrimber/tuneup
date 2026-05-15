@@ -44,6 +44,8 @@ export interface MeetingState {
   timeboxMinutes: number;
   timeboxActive: boolean;
   timeboxStartedAt: number | null;
+  timeboxPaused: boolean;
+  timeboxPausedElapsed: number;
   rescheduleCount: number;
   fiveMinMode: boolean;
 }
@@ -91,6 +93,7 @@ interface AppState {
   meetingDay: string;
   meetingTime: string;
   timeboxDefault: number;
+  partnerName: string | null;
 
   addAgendaItem: (
     text: string,
@@ -112,8 +115,11 @@ interface AppState {
   endMeeting: () => void;
   setTimebox: (minutes: number) => void;
   startTimebox: () => void;
+  pauseTimebox: () => void;
+  resumeTimebox: () => void;
   setMeetingDay: (day: string) => void;
   setMeetingTime: (time: string) => void;
+  setPartnerName: (name: string | null) => void;
 }
 
 function id(): string {
@@ -177,6 +183,7 @@ export const useStore = create<AppState>()(
       meetingDay: "Sunday",
       meetingTime: "8:00 PM",
       timeboxDefault: 20,
+      partnerName: null,
 
       addAgendaItem: (text, category, addedBy) =>
         set((s) => ({
@@ -239,6 +246,8 @@ export const useStore = create<AppState>()(
             timeboxMinutes: get().timeboxDefault,
             timeboxActive: false,
             timeboxStartedAt: null,
+            timeboxPaused: false,
+            timeboxPausedElapsed: 0,
             rescheduleCount: 0,
             fiveMinMode: false,
           },
@@ -293,12 +302,30 @@ export const useStore = create<AppState>()(
       startTimebox: () =>
         set((s) => ({
           meeting: s.meeting
-            ? { ...s.meeting, timeboxActive: true, timeboxStartedAt: Date.now() }
+            ? { ...s.meeting, timeboxActive: true, timeboxStartedAt: Date.now(), timeboxPaused: false, timeboxPausedElapsed: 0 }
             : null,
         })),
 
+      pauseTimebox: () =>
+        set((s) => {
+          if (!s.meeting || !s.meeting.timeboxStartedAt) return {};
+          const elapsed = Date.now() - s.meeting.timeboxStartedAt + s.meeting.timeboxPausedElapsed;
+          return {
+            meeting: { ...s.meeting, timeboxPaused: true, timeboxPausedElapsed: elapsed, timeboxStartedAt: null },
+          };
+        }),
+
+      resumeTimebox: () =>
+        set((s) => {
+          if (!s.meeting) return {};
+          return {
+            meeting: { ...s.meeting, timeboxPaused: false, timeboxStartedAt: Date.now() },
+          };
+        }),
+
       setMeetingDay: (day) => set({ meetingDay: day }),
       setMeetingTime: (time) => set({ meetingTime: time }),
+      setPartnerName: (name) => set({ partnerName: name }),
     }),
     { name: "tuneup-store" }
   )

@@ -7,6 +7,7 @@ import {
   ChevronRight,
   Calendar,
   Clock,
+  X,
 } from "lucide-react";
 import { useState } from "react";
 import AddAgendaSheet from "./AddAgendaSheet";
@@ -18,6 +19,7 @@ export default function HomeTab() {
     meetingDay,
     meetingTime,
     startMeeting,
+    removeAgendaItem,
   } = useStore();
   const [showAdd, setShowAdd] = useState(false);
 
@@ -34,9 +36,9 @@ export default function HomeTab() {
       </div>
 
       <div className="bg-surface rounded-2xl border border-border p-5 mb-5">
-        <div className="flex items-center gap-2 text-muted text-sm mb-3">
+        <div className="flex items-center gap-2 text-coral text-sm mb-3">
           <Calendar size={15} />
-          <span>Next tuneup</span>
+          <span className="font-medium">Next tuneup</span>
         </div>
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -95,9 +97,12 @@ export default function HomeTab() {
                     <p className="text-sm truncate">{item.text}</p>
                     <p className="text-xs text-muted">{meta.label}</p>
                   </div>
-                  <span className="text-xs text-muted capitalize">
-                    {item.addedBy}
-                  </span>
+                  <button
+                    onClick={() => removeAgendaItem(item.id)}
+                    className="text-muted hover:text-danger transition-colors p-1 shrink-0"
+                  >
+                    <X size={15} />
+                  </button>
                 </div>
               );
             })}

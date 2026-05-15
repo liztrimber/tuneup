@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Trash2, Check } from "lucide-react";
 import { useStore } from "@/lib/store";
 
@@ -68,7 +68,7 @@ export default function ActionItemsTab() {
               <div key={item.id} className="flex items-center gap-3 p-4 group">
                 <button
                   onClick={() => toggleActionItem(item.id)}
-                  className="w-5 h-5 rounded border-2 border-border shrink-0 flex items-center justify-center hover:border-primary transition-colors"
+                  className="w-6 h-6 rounded border-2 border-border shrink-0 flex items-center justify-center hover:border-primary transition-colors"
                 />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm">{item.text}</p>
@@ -78,7 +78,7 @@ export default function ActionItemsTab() {
                 </span>
                 <button
                   onClick={() => removeActionItem(item.id)}
-                  className="opacity-0 group-hover:opacity-100 text-muted hover:text-danger transition-all p-1"
+                  className="text-muted hover:text-danger transition-colors p-1 shrink-0"
                 >
                   <Trash2 size={14} />
                 </button>
@@ -98,7 +98,7 @@ export default function ActionItemsTab() {
               <div key={item.id} className="flex items-center gap-3 p-4 group">
                 <button
                   onClick={() => toggleActionItem(item.id)}
-                  className="w-5 h-5 rounded bg-primary shrink-0 flex items-center justify-center"
+                  className="w-6 h-6 rounded bg-primary shrink-0 flex items-center justify-center"
                 >
                   <Check size={12} className="text-white" strokeWidth={3} />
                 </button>
@@ -112,7 +112,7 @@ export default function ActionItemsTab() {
                 </span>
                 <button
                   onClick={() => removeActionItem(item.id)}
-                  className="opacity-0 group-hover:opacity-100 text-muted hover:text-danger transition-all p-1"
+                  className="text-muted hover:text-danger transition-colors p-1 shrink-0"
                 >
                   <Trash2 size={14} />
                 </button>
@@ -123,46 +123,64 @@ export default function ActionItemsTab() {
       )}
 
       {showAdd && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center">
-          <div
-            className="absolute inset-0 bg-black/30"
-            onClick={() => setShowAdd(false)}
-          />
-          <div className="relative bg-surface rounded-t-3xl w-full max-w-lg p-5 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
-            <h2 className="text-lg font-semibold mb-4">Add to-do</h2>
-            <input
-              autoFocus
-              value={newText}
-              onChange={(e) => setNewText(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-              placeholder="What needs to happen?"
-              className="w-full bg-muted-light rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 placeholder:text-muted"
-            />
-            <div className="flex gap-2 mt-3">
-              {(["you", "partner"] as const).map((a) => (
-                <button
-                  key={a}
-                  onClick={() => setNewAssignee(a)}
-                  className={`flex-1 py-2.5 rounded-xl text-sm font-medium border transition-colors capitalize ${
-                    newAssignee === a
-                      ? "border-primary bg-primary-light text-primary-dark"
-                      : "border-border text-muted"
-                  }`}
-                >
-                  {a === "you" ? "I'll do it" : "Partner"}
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={handleAdd}
-              disabled={!newText.trim()}
-              className="w-full mt-4 bg-primary text-white rounded-xl py-3 text-sm font-semibold disabled:opacity-40 hover:bg-primary-dark transition-colors active:scale-[0.98]"
-            >
-              Add to-do
-            </button>
-          </div>
-        </div>
+        <ActionItemSheet onClose={() => setShowAdd(false)} onAdd={handleAdd} newText={newText} setNewText={setNewText} newAssignee={newAssignee} setNewAssignee={setNewAssignee} />
       )}
+    </div>
+  );
+}
+
+function ActionItemSheet({ onClose, onAdd, newText, setNewText, newAssignee, setNewAssignee }: {
+  onClose: () => void;
+  onAdd: () => void;
+  newText: string;
+  setNewText: (v: string) => void;
+  newAssignee: "you" | "partner";
+  setNewAssignee: (v: "you" | "partner") => void;
+}) {
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center">
+      <div className="absolute inset-0 bg-black/30" onClick={onClose} />
+      <div className="relative bg-surface rounded-t-3xl w-full max-w-lg p-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] animate-slide-up">
+        <h2 className="text-lg font-semibold mb-4">Add to-do</h2>
+        <input
+          autoFocus
+          value={newText}
+          onChange={(e) => setNewText(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && onAdd()}
+          placeholder="What needs to happen?"
+          className="w-full bg-muted-light rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 placeholder:text-muted"
+        />
+        <div className="flex gap-2 mt-3">
+          {(["you", "partner"] as const).map((a) => (
+            <button
+              key={a}
+              onClick={() => setNewAssignee(a)}
+              className={`flex-1 py-2.5 rounded-xl text-sm font-medium border transition-colors capitalize ${
+                newAssignee === a
+                  ? "border-primary bg-primary-light text-primary-dark"
+                  : "border-border text-muted"
+              }`}
+            >
+              {a === "you" ? "I'll do it" : "Partner"}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={onAdd}
+          disabled={!newText.trim()}
+          className="w-full mt-4 bg-primary text-white rounded-xl py-3 text-sm font-semibold disabled:opacity-40 hover:bg-primary-dark transition-colors active:scale-[0.98]"
+        >
+          Add to-do
+        </button>
+      </div>
     </div>
   );
 }
