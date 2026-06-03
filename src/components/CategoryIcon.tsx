@@ -8,9 +8,16 @@ import {
   Baby,
   MessageCircle,
   User,
+  Users,
   Home,
   HeartHandshake,
   ArrowRight,
+  UtensilsCrossed,
+  Sparkles,
+  Wrench,
+  PawPrint,
+  TreePine,
+  Brain,
   type LucideProps,
 } from "lucide-react";
 
@@ -22,9 +29,16 @@ const ICONS: Record<string, React.FC<LucideProps>> = {
   Baby,
   MessageCircle,
   User,
+  Users,
   Home,
   HeartHandshake,
   ArrowRight,
+  UtensilsCrossed,
+  Sparkles,
+  Wrench,
+  PawPrint,
+  TreePine,
+  Brain,
 };
 
 export default function CategoryIcon({

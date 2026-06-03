@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import { useStore, CATEGORY_META, type Category } from "@/lib/store";
-import { Check, UserPlus, X } from "lucide-react";
+import { useHousehold } from "@/lib/household-context";
+import { createClient } from "@/lib/supabase/client";
+import { Check, UserPlus, Copy, Share2, Loader2 } from "lucide-react";
 import CategoryIcon from "./CategoryIcon";
+import NotificationSettings from "./NotificationSettings";
 
 const DAYS = [
   "Monday",
@@ -23,7 +26,9 @@ const TIMES = [
 
 export default function SettingsTab() {
   const [showInvite, setShowInvite] = useState(false);
-  const [inviteName, setInviteName] = useState("");
+  const [inviteLink, setInviteLink] = useState<string | null>(null);
+  const [inviteLoading, setInviteLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
   const {
     meetingDay,
     meetingTime,
@@ -34,7 +39,6 @@ export default function SettingsTab() {
     setMeetingTime,
     setTimebox,
     toggleRepeatingCategory,
-    setPartnerName,
   } = useStore();
 
   const categories = Object.entries(CATEGORY_META) as [
@@ -110,6 +114,8 @@ export default function SettingsTab() {
         </div>
       </section>
 
+      <NotificationSettings />
+
       <section className="mb-6">
         <h2 className="text-xs font-semibold text-muted uppercase tracking-wider mb-3">
           Repeating categories
@@ -148,88 +154,17 @@ export default function SettingsTab() {
         </p>
       </section>
 
-      <section className="mb-6">
-        <h2 className="text-xs font-semibold text-muted uppercase tracking-wider mb-3">
-          Partner
-        </h2>
-        {partnerName ? (
-          <div className="bg-surface rounded-xl border border-border p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium">{partnerName}</p>
-                <p className="text-xs text-success">Connected</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-sage-light flex items-center justify-center">
-                  <span className="text-sm font-semibold text-sage-dark">
-                    {partnerName[0].toUpperCase()}
-                  </span>
-                </div>
-                <button
-                  onClick={() => setPartnerName(null)}
-                  className="text-muted hover:text-danger transition-colors p-1"
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : showInvite ? (
-          <div className="bg-surface rounded-xl border border-border p-4">
-            <p className="text-sm font-medium mb-3">Add your partner</p>
-            <input
-              autoFocus
-              value={inviteName}
-              onChange={(e) => setInviteName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && inviteName.trim()) {
-                  setPartnerName(inviteName.trim());
-                  setInviteName("");
-                  setShowInvite(false);
-                }
-              }}
-              placeholder="Partner's name"
-              className="w-full bg-muted-light rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 placeholder:text-muted mb-3"
-            />
-            <div className="flex gap-2">
-              <button
-                onClick={() => setShowInvite(false)}
-                className="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border text-muted hover:bg-muted-light transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  if (inviteName.trim()) {
-                    setPartnerName(inviteName.trim());
-                    setInviteName("");
-                    setShowInvite(false);
-                  }
-                }}
-                disabled={!inviteName.trim()}
-                className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-primary text-white disabled:opacity-40 hover:bg-primary-dark transition-colors"
-              >
-                Add
-              </button>
-            </div>
-          </div>
-        ) : (
-          <button
-            onClick={() => setShowInvite(true)}
-            className="w-full bg-surface rounded-xl border border-dashed border-border p-4 flex items-center gap-3 hover:border-sage transition-colors active:scale-[0.98]"
-          >
-            <div className="w-10 h-10 rounded-full bg-sage-light flex items-center justify-center">
-              <UserPlus size={18} className="text-sage" />
-            </div>
-            <div className="text-left">
-              <p className="text-sm font-semibold">Add your partner</p>
-              <p className="text-xs text-muted">
-                Tuneup works best as a team
-              </p>
-            </div>
-          </button>
-        )}
-      </section>
+      <PartnerSection
+        partnerName={partnerName}
+        showInvite={showInvite}
+        setShowInvite={setShowInvite}
+        inviteLink={inviteLink}
+        setInviteLink={setInviteLink}
+        inviteLoading={inviteLoading}
+        setInviteLoading={setInviteLoading}
+        copied={copied}
+        setCopied={setCopied}
+      />
 
       <section>
         <h2 className="text-xs font-semibold text-muted uppercase tracking-wider mb-3">
@@ -257,5 +192,132 @@ export default function SettingsTab() {
         </div>
       </section>
     </div>
+  );
+}
+
+function PartnerSection({
+  partnerName,
+  showInvite,
+  setShowInvite,
+  inviteLink,
+  setInviteLink,
+  inviteLoading,
+  setInviteLoading,
+  copied,
+  setCopied,
+}: {
+  partnerName: string | null;
+  showInvite: boolean;
+  setShowInvite: (v: boolean) => void;
+  inviteLink: string | null;
+  setInviteLink: (v: string | null) => void;
+  inviteLoading: boolean;
+  setInviteLoading: (v: boolean) => void;
+  copied: boolean;
+  setCopied: (v: boolean) => void;
+}) {
+  const { userId, householdId } = useHousehold();
+
+  async function generateInvite() {
+    setInviteLoading(true);
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("invites")
+      .insert({ household_id: householdId, invited_by: userId })
+      .select("code")
+      .single();
+
+    setInviteLoading(false);
+    if (error) {
+      console.error("create invite:", error.message);
+      return;
+    }
+    const link = `${window.location.origin}/invite?code=${data.code}`;
+    setInviteLink(link);
+    setShowInvite(true);
+  }
+
+  async function copyLink() {
+    if (!inviteLink) return;
+    await navigator.clipboard.writeText(inviteLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  async function shareLink() {
+    if (!inviteLink) return;
+    if (navigator.share) {
+      await navigator.share({ title: "Join me on Tuneup", url: inviteLink });
+    } else {
+      copyLink();
+    }
+  }
+
+  return (
+    <section className="mb-6">
+      <h2 className="text-xs font-semibold text-muted uppercase tracking-wider mb-3">
+        Partner
+      </h2>
+      {partnerName ? (
+        <div className="bg-surface rounded-xl border border-border p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium">{partnerName}</p>
+              <p className="text-xs text-success">Connected</p>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-sage-light flex items-center justify-center">
+              <span className="text-sm font-semibold text-sage-dark">
+                {partnerName[0].toUpperCase()}
+              </span>
+            </div>
+          </div>
+        </div>
+      ) : showInvite && inviteLink ? (
+        <div className="bg-surface rounded-xl border border-border p-4">
+          <p className="text-sm font-medium mb-2">Share this link with your partner</p>
+          <div className="bg-muted-light rounded-lg p-3 text-xs text-muted break-all mb-3 font-mono">
+            {inviteLink}
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={copyLink}
+              className="flex-1 py-2.5 rounded-xl text-sm font-medium border border-border flex items-center justify-center gap-2 hover:bg-muted-light transition-colors"
+            >
+              <Copy size={14} />
+              {copied ? "Copied!" : "Copy"}
+            </button>
+            <button
+              onClick={shareLink}
+              className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-primary text-white flex items-center justify-center gap-2 hover:bg-primary-dark transition-colors"
+            >
+              <Share2 size={14} />
+              Share
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          onClick={generateInvite}
+          disabled={inviteLoading}
+          className="w-full bg-surface rounded-xl border border-dashed border-border p-4 flex items-center gap-3 hover:border-sage transition-colors active:scale-[0.98] disabled:opacity-50"
+        >
+          {inviteLoading ? (
+            <div className="w-10 h-10 rounded-full bg-sage-light flex items-center justify-center">
+              <Loader2 size={18} className="text-sage animate-spin" />
+            </div>
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-sage-light flex items-center justify-center">
+              <UserPlus size={18} className="text-sage" />
+            </div>
+          )}
+          <div className="text-left">
+            <p className="text-sm font-semibold">Invite your partner</p>
+            <p className="text-xs text-muted">
+              They&apos;ll get a link to join your household
+            </p>
+          </div>
+        </button>
+      )}
+    </section>
   );
 }

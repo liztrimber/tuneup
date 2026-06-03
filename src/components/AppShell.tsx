@@ -9,6 +9,7 @@ import ActionItemsTab from "./ActionItemsTab";
 import SettingsTab from "./SettingsTab";
 import MeetingFlow from "./MeetingFlow";
 import OnboardingScreen from "./OnboardingScreen";
+import PushManager from "./PushManager";
 
 const LEFT_TABS = [
   { id: "home", label: "Home", icon: Home },
@@ -73,6 +74,7 @@ export default function AppShell() {
 
   return (
     <div className="flex flex-col h-full">
+      <PushManager />
       <div className="flex-1 overflow-y-auto">
         {activeTab === "home" && <HomeTab />}
         {activeTab === "agenda" && <AgendaTab />}
